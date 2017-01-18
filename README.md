@@ -18,8 +18,6 @@ devtools::install_github("jsta/contour2bathy")
 [Potential Tools and Workflow](https://grasswiki.osgeo.org/wiki/Trace_vector_contours_from_a_scanned_map)
 ---------------------------------------------------------------------------------------------------------
 
--   Inkscape?
-
 -   GRASS
 
 -   R
@@ -31,8 +29,15 @@ Usage
  library(contour2bathy)
  pdf <- system.file("extdata/1835300a.pdf", package = "contour2bathy")
  res <- contour_read(pdf_path = pdf)
- par(mfrow = c(1,1))
- sp::plot(res)
+ par(mfrow = c(1,2))
+ par(mar = c(0,0,3,0))
+ sp::plot(res$raster, col = "black", axes = FALSE, box = FALSE, legend = FALSE, main = "Original PDF")
+ sp::plot(res$lines, main = "SpatialLinesDataFrame Object")
+ 
+ class(res$lines)
+ 
+ longest_line <- res$lines[which.max(sp::SpatialLinesLengths(res$lines)),]
+ sp::plot(longest_line, add = TRUE, col = "green")
 ```
 
 ![](images/unnamed-chunk-2-1.png)

@@ -6,6 +6,9 @@
 \usage{
 contour_read(pdf_path)
 }
+\arguments{
+\item{pdf_path}{file.path to input pdf}
+}
 \description{
 Read a pdf into a lines object
 }
