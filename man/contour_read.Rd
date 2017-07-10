@@ -23,8 +23,6 @@ Read a pdf into a lines object
 \dontrun{
 pdf <- system.file("extdata/1835300a.pdf", package = "contour2bathy")
 res <- contour_read(pdf_path = pdf)
-par(mfrow = c(1,1))
-sp::plot(res)
-
+sp::plot(res$lines)
 }
 }

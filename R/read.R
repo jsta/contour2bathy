@@ -14,13 +14,12 @@
 #' @examples \dontrun{
 #' pdf <- system.file("extdata/1835300a.pdf", package = "contour2bathy")
 #' res <- contour_read(pdf_path = pdf)
-#' par(mfrow = c(1,1))
-#' sp::plot(res)
-#'
+#' sp::plot(res$lines)
 #' }
 contour_read <- function(pdf_path, smallest_length = 0.00001, grow_radius = 2,
                          clean_thresh = 0.08){
   options(warn = -1)
+  Sys.setenv("GRASS_VERBOSE" = 0)
 
   pdf_image    <- magick::image_read(pdf_path)
                                                                                  raster_int   <- as.integer(pdf_image[[1]])
