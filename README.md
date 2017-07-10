@@ -28,9 +28,10 @@ Usage
 ``` r
  library(contour2bathy)
  pdf <- system.file("extdata/1835300a.pdf", package = "contour2bathy")
- res <- contour_read(pdf_path = pdf)
+ res <- contour_read(pdf_path = pdf, smallest_length = 0.00001)
  par(mfrow = c(1,2))
  par(mar = c(0,0,3,0))
+ 
  sp::plot(res$raster, col = "black", axes = FALSE, box = FALSE, legend = FALSE, main = "Original PDF")
  sp::plot(res$lines, main = "SpatialLinesDataFrame Object")
  
@@ -41,6 +42,18 @@ Usage
 ```
 
 ![](images/unnamed-chunk-2-1.png)
+
+### Sensitivity to smallest\_length threshold
+
+``` r
+par(mfrow = c(2,2))
+par(mar = c(0,0,3,0))
+sapply(c(0.007, 0.01, 0.015, 0.02), 
+       function(x) sp::plot(contour_read(pdf_path = pdf, 
+                                         smallest_length = x)$lines))
+```
+
+![](images/unnamed-chunk-3-1.png)
 
 References
 ----------

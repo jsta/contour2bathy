@@ -33,7 +33,7 @@ devtools::install_github("jsta/contour2bathy")
 
 ## Usage
 
-```{r results='hide', message=FALSE,fig.height=4}
+```{r results='hide', message=FALSE, fig.height=4}
  library(contour2bathy)
  pdf <- system.file("extdata/1835300a.pdf", package = "contour2bathy")
  res <- contour_read(pdf_path = pdf, smallest_length = 0.00001)
@@ -51,9 +51,12 @@ devtools::install_github("jsta/contour2bathy")
 ```
 
 ### Sensitivity to smallest_length threshold
-```{r }
+```{r results='hide', message=FALSE, fig.height=4}
 par(mfrow = c(2,2))
-sapply(c(0.007, 0.01, 0.015, 0.02), function(x) sp::plot(contour_read(pdf_path = pdf, smallest_length = x)$lines))
+par(mar = c(0,0,3,0))
+sapply(c(0.007, 0.01, 0.015, 0.02), 
+       function(x) sp::plot(contour_read(pdf_path = pdf, 
+                                         smallest_length = x)$lines))
 ```
 
 ## References
