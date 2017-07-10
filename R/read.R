@@ -1,8 +1,10 @@
 #' contour_read
 #' @description Read a pdf into a lines object
 #' @param pdf_path file.path to input pdf
+#' @param smallest_length numeric threshold defining the smallest line-length to be returned
 #' @export
 #' @importFrom raster brick raster
+#' @importFrom sp SpatialLinesLengths
 #' @importFrom magick image_read
 #' @importFrom rgrass7 execGRASS readVECT writeRAST
 #' @importFrom raster calc brick raster
@@ -14,7 +16,7 @@
 #' sp::plot(res)
 #'
 #' }
-contour_read <- function(pdf_path){
+contour_read <- function(pdf_path, smallest_length){
   options(warn = -1)
 
   pdf_image     <- magick::image_read(pdf_path)
@@ -35,7 +37,7 @@ contour_read <- function(pdf_path){
 
   ####
 
-  loc <- rgrass7::initGRASS("/usr/lib/grass70", home = tempdir(), override = TRUE)
+  loc <- rgrass7::initGRASS("/usr/lib/grass72", home = tempdir(), override = TRUE)
   # rgrass7::gmeta(ignore.stderr = TRUE)
   # set.ignore.stderrOption(TRUE)
 
@@ -55,8 +57,19 @@ contour_read <- function(pdf_path){
 
   rgrass7::execGRASS("v.clean", parameters = list(input = "r_vect", output = "r_vect_clean", tool = "rmdangle", threshold = 0.08), flags = "overwrite")
 
-  res <- rgrass7::readVECT("r_vect_clean")
+  rgrass7::execGRASS("v.build.polylines", input = "r_vect_clean", output = "r_vect_poly", flags = "overwrite")
+  # rgrass7::execGRASS("v.info", map =  "r_vect_poly_cat")
+  rgrass7::execGRASS("v.category", input = "r_vect_poly", output = "r_vect_poly_cat", type = "line", option = "add")
+  rgrass7::execGRASS("v.db.addtable", map  = "r_vect_poly_cat", columns="length_km DOUBLE PRECISION")
+
+  # rgrass7::execGRASS("v.to.db", map = "r_vect_poly_cat", type = "line", option = "length", units = "k", columns = "length_km")
+  # rgrass7::execGRASS("v.extract", input = "r_vect_poly_cat", output = "r_vect_long", type = "line", where = "length_km > 0.02", flags = "overwrite")
+  #
+  res <- rgrass7::readVECT("r_vect_poly_cat")
+  # res <- rgrass7::readVECT("r_vect_long")
   # sp::plot(res)
+
+  res <- res[which(sp::SpatialLinesLengths(res) > smallest_length),]
 
   options(warn = 0)
 
