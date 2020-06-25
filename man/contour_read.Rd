@@ -4,8 +4,12 @@
 \alias{contour_read}
 \title{contour_read}
 \usage{
-contour_read(pdf_path, smallest_length = 1e-05, grow_radius = 2,
-  clean_thresh = 0.08)
+contour_read(
+  pdf_path,
+  smallest_length = 1e-05,
+  grow_radius = 2,
+  clean_thresh = 0.08
+)
 }
 \arguments{
 \item{pdf_path}{file.path to input pdf}

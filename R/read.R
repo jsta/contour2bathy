@@ -1,9 +1,12 @@
 #' contour_read
+#'
 #' @description Read a pdf into a lines object
+#'
 #' @param pdf_path file.path to input pdf
 #' @param smallest_length numeric threshold defining the smallest line-length to be returned
 #' @param grow_radius numeric value defining how much to "grow" lines prior to thinning
 #' @param clean_thresh numeric threshold defining the smallest allowable "dangle"
+#'
 #' @export
 #' @importFrom raster brick raster
 #' @importFrom sp SpatialLinesLengths
@@ -38,13 +41,14 @@ contour_read <- function(pdf_path, smallest_length = 0.00001, grow_radius = 2,
 
   ####
 
-  loc <- rgrass7::initGRASS("/usr/lib/grass72", home = tempdir(),
+  loc <- rgrass7::initGRASS("/usr/lib/grass78", home = tempdir(),
                             override = TRUE)
   # rgrass7::gmeta(ignore.stderr = TRUE)
   # set.ignore.stderrOption(TRUE)
 
   storage.mode(raster_image[]) <- "integer"
 
+  rgrass7::use_sp()
   rgrass7::writeRAST(as(raster_image, "SpatialGridDataFrame"), "raster_image",
                      flags = c("overwrite"))
   rgrass7::execGRASS("g.region", raster = "raster_image")
